@@ -1,7 +1,7 @@
 /* Service worker — offline cache for the Gorn English app.
    Bump CACHE version whenever index.html or quiz-bank.js changes
    (the deploy script does this automatically with a timestamp). */
-const CACHE = "gorn-english-v1";
+const CACHE = "gorn-english-20260615173559";
 const ASSETS = [
   "./",
   "./index.html",
