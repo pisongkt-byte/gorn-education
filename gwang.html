@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>เกมของกวิน 🌸</title>
+<meta name="theme-color" content="#ec407a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="เกมกวิน">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root{ --pink:#ec407a; --pink-d:#c2185b; --ink:#3a2230; --card:#fff; --muted:#9b7c8a; }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{font-family:"Comic Sans MS","Chalkboard SE","Sassoon Primary","Segoe UI",Tahoma,sans-serif; color:var(--ink);
+    background:linear-gradient(160deg,#ffe0ef,#fff6e0); min-height:100%; display:flex; align-items:flex-start; justify-content:center; padding:16px;}
+  .app{width:100%; max-width:640px; background:var(--card); border-radius:28px; box-shadow:0 18px 50px rgba(236,64,122,.20);
+    padding:22px 20px 26px; position:relative; overflow:hidden;}
+  h1{margin:0 0 2px; font-size:28px; color:var(--pink-d); text-align:center;}
+  .tag{text-align:center; color:var(--pink); font-weight:bold; font-size:15px; margin-bottom:14px;}
+  .screen{animation:fade .25s ease;} @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  .hide{display:none !important;}
+  .back{background:none; border:none; color:var(--muted); font-family:inherit; font-size:15px; cursor:pointer; padding:4px 0; margin-bottom:4px;}
+
+  /* topic menu */
+  .topic{display:flex; align-items:center; gap:16px; width:100%; text-align:left; cursor:pointer; border:none;
+    font-family:inherit; border-radius:22px; padding:20px; margin-top:13px; color:#fff; transition:transform .08s;}
+  .topic:active{transform:scale(.97);}
+  .topic .big{font-size:46px;} .topic .t{font-size:25px; font-weight:bold;}
+  .c1{background:linear-gradient(135deg,#ff7eb3,#ec407a); box-shadow:0 7px 0 #c2185b;}
+  .c2{background:linear-gradient(135deg,#4fc3f7,#0288d1); box-shadow:0 7px 0 #01579b;}
+  .c3{background:linear-gradient(135deg,#ffd54f,#ffa000); box-shadow:0 7px 0 #e65100;}
+  .c4{background:linear-gradient(135deg,#81c784,#388e3c); box-shadow:0 7px 0 #1b5e20;}
+  .c5{background:linear-gradient(135deg,#ba68c8,#7b1fa2); box-shadow:0 7px 0 #4a148c;}
+
+  /* play */
+  .topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;}
+  .dots{display:flex; gap:5px; flex-wrap:wrap;} .dot{width:13px; height:13px; border-radius:50%; background:#f0d6e0;}
+  .dot.on{background:var(--pink);} .dot.miss{background:#ef9a9a;}
+  .prompt{text-align:center; margin:6px 0 4px;}
+  .prompt .say{font-size:23px; font-weight:bold; color:var(--pink-d); margin-bottom:8px;}
+  .visual{text-align:center; font-size:30px; line-height:1.25; margin:8px 0 6px; min-height:60px; word-break:break-word;}
+  .visual.count{font-size:46px; letter-spacing:6px;}
+  .math{font-size:54px; font-weight:bold; color:var(--ink); text-align:center; margin:10px 0;}
+  .math .obj{font-size:34px; display:block; margin-top:6px; letter-spacing:4px;}
+  .speaker{display:block; margin:4px auto 10px; background:#fff0f6; border:2.5px solid #f8bbd0; color:var(--pink-d);
+    border-radius:30px; padding:8px 18px; font-family:inherit; font-weight:bold; font-size:16px; cursor:pointer;}
+  .choices{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:8px;}
+  .choice{border:4px solid #f3dbe5; background:#fff; border-radius:22px; min-height:110px; display:flex; align-items:center;
+    justify-content:center; cursor:pointer; font-family:inherit; transition:transform .08s, border-color .12s; padding:8px;}
+  .choice:active{transform:scale(.95);}
+  .choice.correct{border-color:#43a047; background:#e8f8ec; animation:pop .3s;}
+  .choice.wrong{border-color:#e53935; background:#fdecea; animation:shake .3s;}
+  @keyframes pop{50%{transform:scale(1.12);}} @keyframes shake{25%{transform:translateX(-7px);}75%{transform:translateX(7px);}}
+  .choice .num{font-size:54px; font-weight:bold; color:var(--pink-d);}
+  .choice .emoji{font-size:60px;}
+  .swatch{width:74px; height:74px; border-radius:50%; box-shadow:inset 0 -6px 0 rgba(0,0,0,.12);}
+  .shape-c{width:74px;height:74px;border-radius:50%;background:#42a5f5;}
+  .shape-s{width:72px;height:72px;border-radius:10px;background:#ab47bc;}
+  .shape-t{width:0;height:0;border-left:42px solid transparent;border-right:42px solid transparent;border-bottom:74px solid #ffa726;}
+  .bigfb{text-align:center; font-size:30px; font-weight:bold; min-height:40px; margin-top:12px;}
+  .bigfb.good{color:#43a047;} .bigfb.bad{color:#ef6c00;}
+
+  /* result */
+  .stars{text-align:center; font-size:52px; margin:10px 0; letter-spacing:6px;}
+  .scoreline{text-align:center; font-size:30px; font-weight:bold; color:var(--pink-d);}
+  .verdict{text-align:center; font-size:20px; font-weight:bold; margin:10px 0 16px; color:var(--ink);}
+  .btn{display:block; width:100%; border:none; cursor:pointer; font-family:inherit; font-weight:bold; border-radius:18px;
+    padding:16px; font-size:20px; margin-top:12px;}
+  .btn-pink{background:linear-gradient(135deg,#ff7eb3,#ec407a); color:#fff; box-shadow:0 6px 0 #c2185b;}
+  .btn-pink:active{box-shadow:0 2px 0 #c2185b; transform:translateY(3px);}
+  .btn-ghost{background:#fff0f6; color:var(--pink-d);}
+  .confetti{position:absolute; top:-12px; font-size:24px; pointer-events:none; animation:fall linear forwards;}
+  @keyframes fall{to{transform:translateY(760px) rotate(360deg); opacity:.2;}}
+  .foot{text-align:center; color:var(--muted); font-size:12px; margin-top:16px;}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- HOME -->
+  <div class="screen" id="home">
+    <button class="back" onclick="location.href='index.html'">← เปลี่ยนคนเล่น</button>
+    <h1>🌸 เกมของกวิน</h1>
+    <div class="tag">แตะรูปเล่นได้เลย! กดปุ่ม 🔊 เพื่อฟังโจทย์นะ</div>
+    <button class="topic c1" onclick="play('colors')"><span class="big">🎨</span><span class="t">สี</span></button>
+    <button class="topic c2" onclick="play('count')"><span class="big">🔢</span><span class="t">นับเลข 1-10</span></button>
+    <button class="topic c3" onclick="play('shapes')"><span class="big">🔺</span><span class="t">รูปทรง</span></button>
+    <button class="topic c4" onclick="play('vocab')"><span class="big">🐱</span><span class="t">คำศัพท์ (รูปภาพ)</span></button>
+    <button class="topic c5" onclick="play('math')"><span class="big">➕</span><span class="t">บวก-ลบ</span></button>
+  </div>
+
+  <!-- PLAY -->
+  <div class="screen hide" id="play">
+    <div class="topbar"><button class="back" onclick="goHome()">← ออก</button><div class="dots" id="dots"></div></div>
+    <div class="prompt"><div class="say" id="say"></div></div>
+    <button class="speaker" onclick="replay()">🔊 ฟังอีกครั้ง</button>
+    <div id="visual"></div>
+    <div class="choices" id="choices"></div>
+    <div class="bigfb" id="fb"></div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen hide" id="result">
+    <h1 id="rTitle">เก่งมาก! 🎉</h1>
+    <div class="stars" id="rStars"></div>
+    <div class="scoreline" id="rScore"></div>
+    <div class="verdict" id="rVerdict"></div>
+    <button class="btn btn-pink" onclick="again()">▶ เล่นอีกครั้ง</button>
+    <button class="btn btn-ghost" onclick="goHome()">🏠 เลือกเกมอื่น</button>
+    <button class="btn btn-ghost" onclick="saveResult()">💾 บันทึกผล (ให้คุณพ่อ)</button>
+    <div class="foot" id="rFoot"></div>
+  </div>
+
+</div>
+<script>
+/* ---------- helpers ---------- */
+function pad(n){return n<10?"0"+n:""+n;}
+function rnd(n){return Math.floor(Math.random()*n);}
+function pick(a){return a[rnd(a.length)];}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=rnd(i+1);var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function show(id){["home","play","result"].forEach(function(s){document.getElementById(s).classList.toggle("hide",s!==id);});window.scrollTo(0,0);}
+
+/* ---------- speech (Thai) ---------- */
+var voices=[];
+function loadVoices(){ try{voices=window.speechSynthesis.getVoices()||[];}catch(e){} }
+if("speechSynthesis" in window){ loadVoices(); window.speechSynthesis.onvoiceschanged=loadVoices; }
+function speak(text){ try{
+  if(!("speechSynthesis" in window))return;
+  window.speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(text); u.lang="th-TH"; u.rate=.92; u.pitch=1.1;
+  var th=voices.filter(function(v){return /th/i.test(v.lang);}); if(th.length)u.voice=th[0];
+  window.speechSynthesis.speak(u);
+}catch(e){} }
+
+/* ---------- sounds ---------- */
+var actx=null;
+function beep(ok){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();
+  if(ok){tone(660,.1,"sine");setTimeout(function(){tone(990,.12,"sine");},90);}else{tone(220,.16,"square");}}catch(e){}}
+function tone(f,d,t){var o=actx.createOscillator(),g=actx.createGain();o.type=t;o.frequency.value=f;
+  g.gain.setValueAtTime(.0001,actx.currentTime);g.gain.exponentialRampToValueAtTime(.16,actx.currentTime+.01);
+  g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+d);o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+d+.02);}
+function confetti(){var emo=["🎉","⭐","🌸","🎈","✨","🦄"];for(var i=0;i<26;i++){(function(i){setTimeout(function(){
+  var e=document.createElement("div");e.className="confetti";e.textContent=emo[i%emo.length];e.style.left=Math.random()*100+"%";
+  e.style.animationDuration=(2.2+Math.random()*1.6)+"s";document.getElementById("app").appendChild(e);
+  setTimeout(function(){if(e.parentNode)e.parentNode.removeChild(e);},4200);},i*55);})(i);}}
+
+/* ---------- data ---------- */
+var COLORS=[{th:"แดง",en:"red",hex:"#e53935"},{th:"น้ำเงิน",en:"blue",hex:"#1e88e5"},{th:"เหลือง",en:"yellow",hex:"#fdd835"},
+  {th:"เขียว",en:"green",hex:"#43a047"},{th:"ส้ม",en:"orange",hex:"#fb8c00"},{th:"ม่วง",en:"purple",hex:"#8e24aa"},
+  {th:"ชมพู",en:"pink",hex:"#ec407a"},{th:"ดำ",en:"black",hex:"#37474f"}];
+var SHAPES=[{th:"วงกลม",en:"circle",cls:"shape-c"},{th:"สี่เหลี่ยม",en:"square",cls:"shape-s"},
+  {th:"สามเหลี่ยม",en:"triangle",cls:"shape-t"},{th:"ดาว",en:"star",emoji:"⭐"},{th:"หัวใจ",en:"heart",emoji:"❤️"}];
+var VOCAB=[{th:"แมว",en:"cat",e:"🐱"},{th:"หมา",en:"dog",e:"🐶"},{th:"ปลา",en:"fish",e:"🐟"},{th:"นก",en:"bird",e:"🐦"},
+  {th:"กระต่าย",en:"rabbit",e:"🐰"},{th:"ช้าง",en:"elephant",e:"🐘"},{th:"ลิง",en:"monkey",e:"🐵"},{th:"สิงโต",en:"lion",e:"🦁"},
+  {th:"แอปเปิล",en:"apple",e:"🍎"},{th:"กล้วย",en:"banana",e:"🍌"},{th:"ส้ม",en:"orange",e:"🍊"},{th:"มะม่วง",en:"mango",e:"🥭"},
+  {th:"องุ่น",en:"grape",e:"🍇"},{th:"แตงโม",en:"watermelon",e:"🍉"}];
+var COUNT_EMOJI=["🍎","🐤","⭐","🎈","🍌","🐟","🌸","🚗","🦋","🍓"];
+var THNUM=["ศูนย์","หนึ่ง","สอง","สาม","สี่","ห้า","หก","เจ็ด","แปด","เก้า","สิบ"];
+
+/* ---------- game state ---------- */
+var TOPIC_TH={colors:"สี",count:"นับเลข",shapes:"รูปทรง",vocab:"คำศัพท์",math:"บวก-ลบ"};
+var g=null; // {topic, qs:[], idx, score, results:[]}
+var ROUND=10;
+
+function play(topic){ g={topic:topic, idx:0, score:0, tries:0, dotState:[]}; show("play"); nextQ(); }
+function again(){ play(g.topic); }
+
+function makeQ(topic){
+  if(topic==="colors"){ var t=pick(COLORS); var others=shuffle(COLORS.filter(function(c){return c.en!==t.en;})).slice(0,3);
+    var ch=shuffle([t].concat(others)).map(function(c){return {html:'<div class="swatch" style="background:'+c.hex+'"></div>', correct:c.en===t.en};});
+    return {say:"แตะสี"+t.th, speak:"แตะ สี "+t.th, visualHTML:"", choices:ch}; }
+  if(topic==="shapes"){ var t=pick(SHAPES); var others=shuffle(SHAPES.filter(function(s){return s.en!==t.en;})).slice(0,3);
+    var ch=shuffle([t].concat(others)).map(function(s){return {html:(s.emoji?'<span class="emoji">'+s.emoji+'</span>':'<div class="'+s.cls+'"></div>'), correct:s.en===t.en};});
+    return {say:"แตะรูป"+t.th, speak:"แตะ รูป "+t.th, visualHTML:"", choices:ch}; }
+  if(topic==="vocab"){ var t=pick(VOCAB); var others=shuffle(VOCAB.filter(function(v){return v.en!==t.en;})).slice(0,3);
+    var ch=shuffle([t].concat(others)).map(function(v){return {html:'<span class="emoji">'+v.e+'</span>', correct:v.en===t.en};});
+    return {say:"แตะรูป "+t.th+" ("+t.en+")", speak:"แตะ รูป "+t.th, visualHTML:"", choices:ch}; }
+  if(topic==="count"){ var n=1+rnd(10); var em=pick(COUNT_EMOJI);
+    var vis='<div class="visual count">'+Array(n+1).join(em)+'</div>';
+    var nums={}; nums[n]=1; while(Object.keys(nums).length<4){ var d=Math.max(1,Math.min(10,n+(rnd(5)-2))); nums[d]=1; }
+    var ch=shuffle(Object.keys(nums)).map(function(k){return {html:'<span class="num">'+k+'</span>', correct:parseInt(k,10)===n};});
+    return {say:"มีกี่อัน? นับดูสิ", speak:"นับดูสิ มีกี่อัน", visualHTML:vis, choices:ch, answerNum:n}; }
+  // math
+  var plus=Math.random()<0.5, a, b, res;
+  if(plus){ a=1+rnd(8); b=1+rnd(9-a); res=a+b; }   // sum 2..9
+  else { a=2+rnd(8); b=1+rnd(a); res=a-b; }          // a 2..9, res>=0
+  var em2=pick(["🍎","⭐","🎈","🍌"]);
+  var vis2='<div class="math">'+a+' '+(plus?'+':'−')+' '+b+' = ?'+
+    '<span class="obj">'+Array(a+1).join(em2)+' '+(plus?'+':'−')+' '+Array(b+1).join(em2)+'</span></div>';
+  var nums2={}; nums2[res]=1; while(Object.keys(nums2).length<4){ var d2=Math.max(0,Math.min(10,res+(rnd(5)-2))); nums2[d2]=1; }
+  var ch2=shuffle(Object.keys(nums2)).map(function(k){return {html:'<span class="num">'+k+'</span>', correct:parseInt(k,10)===res};});
+  var sp=(THNUM[a]||a)+(plus?" บวก ":" ลบ ")+(THNUM[b]||b)+" เท่ากับเท่าไหร่";
+  return {say:a+(plus?' + ':' − ')+b+' = ?', speak:sp, visualHTML:vis2, choices:ch2, answerNum:res};
+}
+
+function renderDots(){ var h=""; for(var i=0;i<ROUND;i++){ var c="dot"+(g.dotState[i]==="ok"?" on":g.dotState[i]==="miss"?" miss":""); h+='<span class="'+c+'"></span>'; } document.getElementById("dots").innerHTML=h; }
+
+function nextQ(){
+  if(g.idx>=ROUND){ return showResult(); }
+  g.cur=makeQ(g.topic); g.firstTry=true;
+  document.getElementById("say").textContent=g.cur.say;
+  document.getElementById("visual").innerHTML=g.cur.visualHTML||"";
+  document.getElementById("fb").textContent=""; document.getElementById("fb").className="bigfb";
+  var cc=document.getElementById("choices"); cc.innerHTML="";
+  g.cur.choices.forEach(function(c){ var b=document.createElement("button"); b.className="choice"; b.innerHTML=c.html;
+    b.onclick=function(){ choose(c,b); }; cc.appendChild(b); });
+  renderDots();
+  setTimeout(function(){ speak(g.cur.speak||g.cur.say); },220);
+}
+function replay(){ speak(g.cur.speak||g.cur.say); }
+
+function choose(c,btn){
+  if(btn.classList.contains("correct"))return;
+  if(c.correct){
+    btn.classList.add("correct"); beep(true);
+    if(g.firstTry){ g.score++; g.dotState[g.idx]="ok"; } else if(g.dotState[g.idx]!=="miss"){ g.dotState[g.idx]="miss"; }
+    renderDots();
+    var fb=document.getElementById("fb"); fb.textContent=pick(["เก่งมาก! 🌟","ถูกต้อง! 🎉","ใช่เลย! 👏"]); fb.className="bigfb good";
+    speak(pick(["เก่งมาก","ถูกต้อง","ใช่เลย"]));
+    Array.prototype.forEach.call(document.querySelectorAll("#choices .choice"),function(x){x.onclick=null;});
+    g.idx++; setTimeout(nextQ,1100);
+  } else {
+    if(g.firstTry){ g.dotState[g.idx]="miss"; renderDots(); }
+    g.firstTry=false; btn.classList.add("wrong"); btn.onclick=null; beep(false);
+    var fb2=document.getElementById("fb"); fb2.textContent="ลองอีกที 💪"; fb2.className="bigfb bad"; speak("ลองอีกที");
+  }
+}
+
+function showResult(){
+  var pct=g.score/ROUND, st=pct>=0.9?5:pct>=0.7?4:pct>=0.5?3:pct>=0.3?2:1;
+  document.getElementById("rStars").textContent="⭐".repeat(st)+"☆".repeat(5-st);
+  document.getElementById("rScore").textContent="ได้ "+g.score+" / "+ROUND+" ดาวแรก";
+  var t,v; if(pct>=0.7){t="เยี่ยมมาก! 🎉";v="กวินเก่งมากเลยลูก! 🌸";} else if(pct>=0.4){t="ดีมากจ้ะ! 😄";v="เล่นได้ดีเลย ลองอีกรอบนะ 💕";} else {t="เก่งมากที่ลองนะ! 🌱";v="ค่อยๆ เล่น สนุกไว้ก่อน เดี๋ยวก็เก่งขึ้น ❤️";}
+  document.getElementById("rTitle").textContent=t; document.getElementById("rVerdict").textContent=v;
+  document.getElementById("rFoot").textContent="เกม: "+TOPIC_TH[g.topic];
+  if(pct>=0.6)confetti(); speak(pct>=0.7?"เยี่ยมมาก กวินเก่งมากเลย":"เก่งมากที่ลองนะ");
+  show("result");
+}
+function saveResult(){ var d=new Date(), stamp=d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+  var out={child:"gwang",app:"gwang-learn",topic:g.topic,score:g.score,max:ROUND,percent:Math.round(g.score/ROUND*100),date:stamp,datetime:d.toISOString()};
+  var b=new Blob([JSON.stringify(out,null,2)],{type:"application/json"}); var u=URL.createObjectURL(b);
+  var a=document.createElement("a"); a.href=u; a.download="gwang-"+g.topic+"-"+stamp+".json"; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(u);
+  document.getElementById("rFoot").textContent="บันทึกแล้ว ✓ อยู่ใน Downloads";
+}
+function goHome(){ try{window.speechSynthesis.cancel();}catch(e){} show("home"); }
+
+/* PWA */
+if("serviceWorker" in navigator && location.protocol.indexOf("http")===0){
+  window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});
+}
+</script>
+</body>
+</html>
